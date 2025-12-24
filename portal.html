@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Cliente - JurisFlow</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .portal-header {
+            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .client-info {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        
+        .client-cases {
+            margin-top: 40px;
+        }
+        
+        .case-item {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 4px solid #3498db;
+        }
+        
+        .case-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .case-item.urgente {
+            border-left-color: #e74c3c;
+        }
+        
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .case-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .case-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+        
+        .case-description {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .documents-list {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .document-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background 0.3s;
+        }
+        
+        .document-item:hover {
+            background: #e9ecef;
+        }
+        
+        .document-icon {
+            font-size: 20px;
+            color: #3498db;
+        }
+        
+        .document-info {
+            flex: 1;
+        }
+        
+        .document-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #95a5a6;
+        }
+        
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .login-form {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .case-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .case-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .login-form {
+                margin: 50px auto;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegação -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-balance-scale"></i>
+                <span>JurisFlow</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Início</a>
+                <a href="pedido.html"><i class="fas fa-file-signature"></i> Pedir Orçamento</a>
+                <a href="portal.html" class="active"><i class="fas fa-user"></i> Portal do Cliente</a>
+                <a href="escritorio.html"><i class="fas fa-briefcase"></i> Área do Escritório</a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+        <!-- Tela de Login (mostrada se cliente não estiver logado) -->
+        <div id="loginScreen">
+            <div class="login-form">
+                <h2 class="text-center mb-4" style="color: #2c3e50;">
+                    <i class="fas fa-user-circle"></i> Acessar Portal
+                </h2>
+                
+                <div class="form-group">
+                    <label for="loginEmail"><i class="fas fa-envelope"></i> E-mail</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginCaseId"><i class="fas fa-key"></i> ID do Caso (opcional)</label>
+                    <input type="text" id="loginCaseId" class="form-control" placeholder="SOL-XXXXXX">
+                </div>
+                
+                <div class="form-group">
+                    <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                        <i class="fas fa-info-circle"></i> Digite o e-mail usado no pedido para acessar seus casos.
+                    </p>
+                </div>
+                
+                <button onclick="loginClient()" class="btn btn-primary btn-large" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Acessar Portal
+                </button>
+                
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+                    <p style="color: #666; margin-bottom: 15px;">Não tem um caso ainda?</p>
+                    <a href="pedido.html" class="btn btn-outline" style="width: 100%;">
+                        <i class="fas fa-file-signature"></i> Solicitar Orçamento
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portal do Cliente (mostrado após login) -->
+        <div id="portalScreen" style="display: none;">
+            <!-- Cabeçalho do Portal -->
+            <div class="portal-header">
+                <h1><i class="fas fa-user-circle"></i> Portal do Cliente</h1>
+                <p>Acompanhe seus casos e documentos em um só lugar</p>
+                <button onclick="logoutClient()" class="btn btn-outline" style="color: white; border-color: white; margin-top: 20px;">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+
+            <!-- Informações do Cliente -->
+            <div class="client-info">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">
+                    <i class="fas fa-user"></i> Seus Dados
+                </h3>
+                <div id="clientInfoContent">
+                    <!-- Informações serão carregadas via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Casos do Cliente -->
+            <div class="client-cases">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">
+                    <i class="fas fa-folder-open"></i> Seus Casos
+                </h3>
+                
+                <div id="clientCasesList">
+                    <!-- Casos serão carregados via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Detalhes do Documento -->
+        <div id="documentModal" class="modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3 id="documentModalTitle">Documento</h3>
+                    <button class="btn-close" onclick="closeDocumentModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="documentModalContent">
+                        <!-- Conteúdo será carregado via JavaScript -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="closeDocumentModal()" class="btn btn-outline">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/database.js"></script>
+    <script src="scripts/status-config.js"></script>
+    
+    <script>
+        let currentClient = null;
+        let clientCases = [];
+        
+        // Verificar se cliente já está logado
+        function checkLogin() {
+            const savedClient = localStorage.getItem('jurisflow_logged_client');
+            if (savedClient) {
+                try {
+                    currentClient = JSON.parse(savedClient);
+                    showPortal();
+                } catch (error) {
+                    console.error('Erro ao carregar cliente logado:', error);
+                    localStorage.removeItem('jurisflow_logged_client');
+                }
+            }
+        }
+        
+        // Login do cliente
+        function loginClient() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const caseId = document.getElementById('loginCaseId').value.trim();
+            
+            if (!email) {
+                alert('Por favor, digite seu e-mail.');
+                return;
+            }
+            
+            try {
+                // Buscar cliente por e-mail
+                const client = JurisFlowDB.getClientByEmail(email);
+                
+                if (!client) {
+                    // Se não encontrou cliente, verificar se existe caso com esse e-mail
+                    const cases = JurisFlowDB.getCases();
+                    const clientCase = cases.find(c => c.email === email);
+                    
+                    if (!clientCase) {
+                        alert('Nenhum caso encontrado com este e-mail. Por favor, verifique o e-mail digitado.');
+                        return;
+                    }
+                    
+                    // Criar cliente a partir do caso
+                    currentClient = {
+                        id: 'CLI-' + Date.now().toString(36).toUpperCase(),
+                        nome: clientCase.nome,
+                        email: clientCase.email,
+                        telefone: clientCase.telefone,
+                        casos: [clientCase.id]
+                    };
+                    
+                    JurisFlowDB.registerClient(currentClient);
+                } else {
+                    currentClient = client;
+                }
+                
+                // Salvar cliente logado
+                localStorage.setItem('jurisflow_logged_client', JSON.stringify(currentClient));
+                showPortal();
+                
+            } catch (error) {
+                console.error('Erro ao fazer login:', error);
+                alert('Erro ao fazer login. Por favor, tente novamente.');
+            }
+        }
+        
+        // Logout do cliente
+        function logoutClient() {
+            currentClient = null;
+            localStorage.removeItem('jurisflow_logged_client');
+            showLogin();
+        }
+        
+        // Mostrar tela de login
+        function showLogin() {
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('portalScreen').style.display = 'none';
+            
+            // Limpar campos de login
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginCaseId').value = '';
+        }
+        
+        // Mostrar portal do cliente
+        function showPortal() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('portalScreen').style.display = 'block';
+            loadClientData();
+        }
+        
+        // Carregar dados do cliente
+        function loadClientData() {
+            if (!currentClient) return;
+            
+            // Carregar informações do cliente
+            document.getElementById('clientInfoContent').innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div>
+                        <p><strong><i class="fas fa-user"></i> Nome:</strong> ${currentClient.nome}</p>
+                        <p><strong><i class="fas fa-envelope"></i> E-mail:</strong> ${currentClient.email}</p>
+                        <p><strong><i class="fas fa-phone"></i> Telefone:</strong> ${currentClient.telefone || 'Não informado'}</p>
+                    </div>
+                    <div>
+                        <p><strong><i class="fas fa-id-card"></i> CPF:</strong> ${currentClient.cpf || 'Não informado'}</p>
+                        <p><strong><i class="fas fa-calendar"></i> Cliente desde:</strong> ${new Date(currentClient.created_at).toLocaleDateString('pt-BR')}</p>
+                        <p><strong><i class="fas fa-folder"></i> Total de casos:</strong> ${currentClient.casos ? currentClient.casos.length : 0}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Carregar casos do cliente
+            loadClientCases();
+        }
+        
+        // Carregar casos do cliente
+        function loadClientCases() {
+            if (!currentClient) return;
+            
+            const allCases = JurisFlowDB.getCases();
+            
+            // Filtrar casos do cliente
+            if (currentClient.casos && currentClient.casos.length > 0) {
+                clientCases = allCases.filter(caso => currentClient.casos.includes(caso.id));
+            } else {
+                // Se não tem casos vinculados, buscar por e-mail
+                clientCases = allCases.filter(caso => caso.email === currentClient.email);
+                
+                // Atualizar cliente com os casos encontrados
+                if (clientCases.length > 0) {
+                    currentClient.casos = clientCases.map(c => c.id);
+                    JurisFlowDB.registerClient(currentClient);
+                }
+            }
+            
+            renderClientCases();
+        }
+        
+        // Renderizar casos do cliente
+        function renderClientCases() {
+            const casesList = document.getElementById('clientCasesList');
+            
+            if (clientCases.length === 0) {
+                casesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>Nenhum caso encontrado</h3>
+                        <p>Você ainda não tem casos registrados.</p>
+                        <a href="pedido.html" class="btn btn-primary mt-3">
+                            <i class="fas fa-file-signature"></i> Solicitar Orçamento
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            casesList.innerHTML = clientCases.map(caso => renderCaseItem(caso)).join('');
+        }
+        
+        // Renderizar item de caso
+        function renderCaseItem(caso) {
+            const statusConfig = getStatusConfig(caso.status);
+            const areaName = getAreaName(caso.area);
+            const documents = JurisFlowDB.getDocumentsByCaseId(caso.id);
+            
+            return `
+                <div class="case-item ${caso.urgente ? 'urgente' : ''}">
+                    <div class="case-header">
+                        <div>
+                            <h4 style="color: #2c3e50; margin-bottom: 5px;">${caso.id}</h4>
+                            ${getStatusBadge(caso.status, caso.urgente)}
+                        </div>
+                        
+                        <div class="case-actions">
+                            <button onclick="viewCaseDetails('${caso.id}')" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye"></i> Detalhes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="case-details">
+                        <div class="detail-item">
+                            <i class="fas fa-layer-group"></i>
+                            <span>${areaName}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>${new Date(caso.created_at).toLocaleDateString('pt-BR')}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${caso.urgencia || 'Normal'}</span>
+                        </div>
+                        ${caso.valor_estimado ? `
+                            <div class="detail-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>${caso.valor_estimado}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    ${caso.pedido ? `
+                        <div class="case-description">
+                            ${caso.pedido.substring(0, 200)}${caso.pedido.length > 200 ? '...' : ''}
+                        </div>
+                    ` : ''}
+                    
+                    ${documents.length > 0 ? `
+                        <div class="documents-list">
+                            <h5 style="color: #2c3e50; margin-bottom: 15px;">
+                                <i class="fas fa-paperclip"></i> Documentos (${documents.length})
+                            </h5>
+                            ${documents.map(doc => renderDocumentItem(doc)).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+        
+        // Renderizar item de documento
+        function renderDocumentItem(doc) {
+            const icon = doc.tipo === 'contrato' ? 'fas fa-file-contract' : 'fas fa-file-pdf';
+            
+            return `
+                <div class="document-item">
+                    <div class="document-icon">
+                        <i class="${icon}"></i>
+                    </div>
+                    <div class="document-info">
+                        <div style="font-weight: bold; color: #2c3e50;">${doc.nome}</div>
+                        <div style="font-size: 12px; color: #666;">
+                            ${new Date(doc.created_at).toLocaleDateString('pt-BR')}
+                            • ${doc.status === 'enviado' ? 'Enviado' : 'Pendente'}
+                        </div>
+                    </div>
+                    <div class="document-actions">
+                        <button onclick="viewDocument('${doc.id}')" class="btn btn-sm">
+                            <i class="fas fa-eye"></i> Ver
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Ver detalhes do caso
+        function viewCaseDetails(caseId) {
+            const caso = JurisFlowDB.getCaseById(caseId);
+            if (!caso) return;
+            
+            const timeline = JurisFlowDB.getTimelineByCaseId(caseId);
+            const documents = JurisFlowDB.getDocumentsByCaseId(caseId);
+            
+            document.getElementById('documentModalTitle').textContent = `Detalhes do Caso: ${caso.id}`;
+            
+            document.getElementById('documentModalContent').innerHTML = `
+                <div style="margin-bottom: 30px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;">Informações Gerais</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div>
+                            <p><strong>Status:</strong> ${getStatusBadge(caso.status, caso.urgente)}</p>
+                            <p><strong>Área:</strong> ${getAreaName(caso.area)}</p>
+                            <p><strong>Urgência:</strong> ${caso.urgencia || 'Normal'}</p>
+                        </div>
+                        <div>
+                            <p><strong>Criado em:</strong> ${new Date(caso.created_at).toLocaleDateString('pt-BR')}</p>
+                            ${caso.valor_estimado ? `<p><strong>Valor Estimado:</strong> ${caso.valor_estimado}</p>` : ''}
+                        </div>
+                    </div>
+                </div>
+                
+                ${caso.pedido ? `
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">Descrição do Caso</h4>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-line;">
+                            ${caso.pedido}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${documents.length > 0 ? `
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">Documentos (${documents.length})</h4>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                            ${documents.map(doc => `
+                                <div style="display: flex; align-items: center; gap: 15px; padding: 10px; background: white; border-radius: 6px; margin-bottom: 10px;">
+                                    <i class="fas fa-file-pdf" style="color: #3498db;"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: bold;">${doc.nome}</div>
+                                        <div style="font-size: 12px; color: #666;">
+                                            ${new Date(doc.created_at).toLocaleDateString('pt-BR')}
+                                            • ${doc.status === 'enviado' ? 'Enviado' : 'Pendente'}
+                                        </div>
+                                    </div>
+                                    <button onclick="viewDocument('${doc.id}')" class="btn btn-sm">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${timeline.length > 0 ? `
+                    <div>
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">Histórico</h4>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                            ${timeline.map(item => `
+                                <div style="padding: 10px 0; border-bottom: 1px solid #e9ecef;">
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                                        ${new Date(item.created_at).toLocaleString('pt-BR')}
+                                    </div>
+                                    <div style="font-weight: bold;">${item.titulo}</div>
+                                    <div>${item.descricao}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+            
+            document.getElementById('documentModal').style.display = 'flex';
+        }
+        
+        // Ver documento
+        function viewDocument(documentId) {
+            alert(`Visualizar documento ${documentId} - Em um sistema real, isso abriria o documento`);
+        }
+        
+        // Fechar modal de documento
+        function closeDocumentModal() {
+            document.getElementById('documentModal').style.display = 'none';
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLogin();
+            
+            // Menu responsivo
+            document.querySelector('.nav-toggle').addEventListener('click', function() {
+                document.querySelector('.nav-links').classList.toggle('show');
+            });
+            
+            // Permitir login com Enter
+            document.getElementById('loginEmail').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') loginClient();
+            });
+            
+            document.getElementById('loginCaseId').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') loginClient();
+            });
+            
+            // Fechar modal ao clicar fora
+            document.getElementById('documentModal').addEventListener('click', function(e) {
+                if (e.target === this) closeDocumentModal();
+            });
+        });
+    </script>
+</body>
+</html>

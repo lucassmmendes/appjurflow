@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JurisFlow - Sistema de Gestão Jurídica</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(-50px) translateX(-50px); }
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+        
+        .features {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 2px solid transparent;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #3498db;
+            box-shadow: 0 20px 40px rgba(52, 152, 219, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .stats {
+            padding: 60px 0;
+            background: white;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .testimonials {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+        
+        .testimonial-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-card::before {
+            content: '"';
+            font-size: 100px;
+            color: #3498db;
+            opacity: 0.1;
+            position: absolute;
+            top: 20px;
+            left: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .feature-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegação -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-balance-scale"></i>
+                <span>JurisFlow</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active"><i class="fas fa-home"></i> Início</a>
+                <a href="pedido.html"><i class="fas fa-file-signature"></i> Pedir Orçamento</a>
+                <a href="portal.html"><i class="fas fa-user"></i> Portal do Cliente</a>
+                <a href="escritorio.html"><i class="fas fa-briefcase"></i> Área do Escritório</a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1><i class="fas fa-balance-scale"></i> JurisFlow</h1>
+            <p>Sistema Inteligente de Gestão Jurídica</p>
+            <p style="font-size: 18px; margin-bottom: 40px;">
+                Transforme sua prática jurídica com automação, organização e eficiência
+            </p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="pedido.html" class="btn btn-success btn-large">
+                    <i class="fas fa-file-signature"></i> Solicitar Orçamento
+                </a>
+                <a href="escritorio.html" class="btn btn-outline btn-large" style="color: white; border-color: white;">
+                    <i class="fas fa-briefcase"></i> Acessar Escritório
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <h2 class="text-center mb-4" style="color: #2c3e50; font-size: 36px;">
+                Por que escolher o JurisFlow?
+            </h2>
+            <p class="text-center mb-4" style="color: #666; max-width: 700px; margin: 0 auto 50px;">
+                Uma plataforma completa desenvolvida para otimizar todos os processos do seu escritório
+            </p>
+            
+            <div class="grid grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Rápido e Eficiente</h3>
+                    <p style="color: #666;">
+                        Processos automatizados que reduzem o tempo de gestão em até 70%
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Seguro e Confiável</h3>
+                    <p style="color: #666;">
+                        Dados criptografados e backup automático garantem a segurança das informações
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Análise Inteligente</h3>
+                    <p style="color: #666;">
+                        Relatórios detalhados e insights para melhor tomada de decisão
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Totalmente Responsivo</h3>
+                    <p style="color: #666;">
+                        Acesse de qualquer dispositivo: computador, tablet ou smartphone
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Atualização em Tempo Real</h3>
+                    <p style="color: #666;">
+                        Todas as alterações são sincronizadas instantaneamente entre cliente e escritório
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Suporte Dedicado</h3>
+                    <p style="color: #666;">
+                        Equipe especializada disponível para auxiliar em todas as etapas
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="stats">
+        <div class="container">
+            <div class="grid grid-4">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCasos">0</div>
+                    <div style="color: #666; font-weight: 500;">Casos Atendidos</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number" id="totalClientes">0</div>
+                    <div style="color: #666; font-weight: 500;">Clientes Satisfeitos</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">24h</div>
+                    <div style="color: #666; font-weight: 500;">Tempo Médio de Resposta</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div style="color: #666; font-weight: 500;">Satisfação dos Clientes</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 style="font-size: 36px; margin-bottom: 20px;">Pronto para transformar seu escritório?</h2>
+            <p style="font-size: 18px; margin-bottom: 40px; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Experimente gratuitamente por 30 dias e descubra como podemos otimizar seus processos
+            </p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="pedido.html" class="btn btn-success btn-large">
+                    <i class="fas fa-rocket"></i> Começar Agora
+                </a>
+                <a href="#contact" class="btn btn-outline btn-large" style="color: white; border-color: white;">
+                    <i class="fas fa-phone"></i> Falar com Especialista
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="text-center mb-4" style="color: #2c3e50; font-size: 36px;">
+                O que nossos clientes dizem
+            </h2>
+            
+            <div class="grid grid-3">
+                <div class="testimonial-card">
+                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                        <div style="width: 60px; height: 60px; background: #3498db; border-radius: 50%; margin-right: 15px;"></div>
+                        <div>
+                            <div style="font-weight: bold; color: #2c3e50;">Dr. Carlos Silva</div>
+                            <div style="color: #666; font-size: 14px;">Advogado Criminalista</div>
+                        </div>
+                    </div>
+                    <p style="color: #555; font-style: italic; line-height: 1.6;">
+                        "O JurisFlow revolucionou minha prática. A organização dos casos e a comunicação com clientes melhorou em 200%."
+                    </p>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                        <div style="width: 60px; height: 60px; background: #27ae60; border-radius: 50%; margin-right: 15px;"></div>
+                        <div>
+                            <div style="font-weight: bold; color: #2c3e50;">Dra. Ana Santos</div>
+                            <div style="color: #666; font-size: 14px;">Advogada Trabalhista</div>
+                        </div>
+                    </div>
+                    <p style="color: #555; font-style: italic; line-height: 1.6;">
+                        "A automação de documentos me poupa horas de trabalho toda semana. Sistema indispensável para qualquer escritório moderno."
+                    </p>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                        <div style="width: 60px; height: 60px; background: #9b59b6; border-radius: 50%; margin-right: 15px;"></div>
+                        <div>
+                            <div style="font-weight: bold; color: #2c3e50;">Dr. Roberto Lima</div>
+                            <div style="color: #666; font-size: 14px;">Sócio de Escritório</div>
+                        </div>
+                    </div>
+                    <p style="color: #555; font-style: italic; line-height: 1.6;">
+                        "A integração entre áreas e o acompanhamento em tempo real são diferenciais competitivos incríveis."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: #2c3e50; color: white; padding: 60px 0 30px;">
+        <div class="container">
+            <div class="grid grid-4">
+                <div>
+                    <div class="nav-logo" style="margin-bottom: 20px;">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>JurisFlow</span>
+                    </div>
+                    <p style="color: #bdc3c7; margin-bottom: 20px;">
+                        Soluções inovadoras para a gestão jurídica moderna.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 style="margin-bottom: 20px; color: white;">Links Rápidos</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;"><a href="index.html" style="color: #bdc3c7; text-decoration: none;">Início</a></li>
+                        <li style="margin-bottom: 10px;"><a href="pedido.html" style="color: #bdc3c7; text-decoration: none;">Pedir Orçamento</a></li>
+                        <li style="margin-bottom: 10px;"><a href="portal.html" style="color: #bdc3c7; text-decoration: none;">Portal do Cliente</a></li>
+                        <li style="margin-bottom: 10px;"><a href="escritorio.html" style="color: #bdc3c7; text-decoration: none;">Área do Escritório</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="margin-bottom: 20px; color: white;">Contato</h4>
+                    <ul style="list-style: none; padding: 0; color: #bdc3c7;">
+                        <li style="margin-bottom: 10px;">
+                            <i class="fas fa-map-marker-alt"></i> Av. Paulista, 1000 - São Paulo
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <i class="fas fa-phone"></i> (11) 99999-9999
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <i class="fas fa-envelope"></i> contato@jurisflow.com
+                        </li>
+                    </ul>
+                </div>
+                
+                <div id="contact">
+                    <h4 style="margin-bottom: 20px; color: white;">Fale Conosco</h4>
+                    <div class="d-flex gap-2">
+                        <a href="#" style="color: white; font-size: 20px; margin-right: 15px;">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" style="color: white; font-size: 20px; margin-right: 15px;">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" style="color: white; font-size: 20px; margin-right: 15px;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" style="color: white; font-size: 20px;">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid #34495e; margin-top: 40px; padding-top: 20px; text-align: center; color: #bdc3c7;">
+                <p>&copy; 2024 JurisFlow. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/database.js"></script>
+    <script>
+        // Atualizar estatísticas
+        function updateStats() {
+            try {
+                const stats = JurisFlowDB.getStatistics();
+                document.getElementById('totalCasos').textContent = stats.totalCasos;
+                document.getElementById('totalClientes').textContent = stats.totalClientes;
+            } catch (error) {
+                console.log('Erro ao carregar estatísticas:', error);
+            }
+        }
+        
+        // Menu responsivo
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            
+            document.querySelector('.nav-toggle').addEventListener('click', function() {
+                document.querySelector('.nav-links').classList.toggle('show');
+            });
+        });
+    </script>
+</body>
+</html>

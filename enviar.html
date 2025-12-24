@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Documentos - JurisFlow</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .send-header {
+            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+        }
+        
+        .case-info-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .case-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .case-detail-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .send-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .send-option {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .send-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .send-option.selected {
+            border-color: #27ae60;
+            background: #e8f6ef;
+        }
+        
+        .option-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .option-icon.email { color: #3498db; }
+        .option-icon.whatsapp { color: #25D366; }
+        .option-icon.platform { color: #9b59b6; }
+        
+        .documents-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .document-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .document-item:hover {
+            background: #f8f9fa;
+            border-color: #3498db;
+        }
+        
+        .document-checkbox {
+            margin-right: 15px;
+        }
+        
+        .document-icon {
+            font-size: 24px;
+            color: #3498db;
+            margin-right: 15px;
+        }
+        
+        .document-info {
+            flex: 1;
+        }
+        
+        .document-name {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .document-meta {
+            font-size: 12px;
+            color: #95a5a6;
+        }
+        
+        .message-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .message-preview {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+        }
+        
+        .tracking-section {
+            background: #e8f4fc;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .tracking-code {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+            margin: 15px 0;
+            border: 2px dashed #3498db;
+        }
+        
+        .confirmation-modal {
+            max-width: 600px;
+        }
+        
+        @media (max-width: 768px) {
+            .send-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .case-info-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .case-details {
+                flex-direction: column;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegação -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-balance-scale"></i>
+                <span>JurisFlow</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Início</a>
+                <a href="escritorio.html"><i class="fas fa-arrow-left"></i> Voltar ao Escritório</a>
+            </div>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Cabeçalho -->
+        <div class="send-header">
+            <div class="container">
+                <h1><i class="fas fa-share-square"></i> Enviar Documentos</h1>
+                <p>Envie os documentos aprovados para o cliente</p>
+            </div>
+        </div>
+
+        <!-- Informações do Caso -->
+        <div class="case-info-bar" id="caseInfoBar">
+            <!-- Informações serão carregadas via JavaScript -->
+        </div>
+
+        <!-- Seção de Documentos -->
+        <div class="documents-section">
+            <h3><i class="fas fa-clipboard-check"></i> Documentos para Envio</h3>
+            <p style="color: #666; margin-bottom: 20px;">Selecione os documentos que deseja enviar:</p>
+            
+            <div id="documentsList">
+                <!-- Documentos serão carregados via JavaScript -->
+            </div>
+        </div>
+
+        <!-- Seção de Métodos de Envio -->
+        <div class="send-options">
+            <div class="send-option" data-method="email" onclick="selectMethod('email')">
+                <div class="option-icon email">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h4>E-mail</h4>
+                <p>Envie por e-mail com link para download seguro</p>
+                <div class="mt-3">
+                    <small><i class="fas fa-clock"></i> Imediato</small>
+                </div>
+            </div>
+            
+            <div class="send-option" data-method="whatsapp" onclick="selectMethod('whatsapp')">
+                <div class="option-icon whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h4>WhatsApp</h4>
+                <p>Envie mensagem com link para o cliente</p>
+                <div class="mt-3">
+                    <small><i class="fas fa-clock"></i> Imediato</small>
+                </div>
+            </div>
+            
+            <div class="send-option" data-method="platform" onclick="selectMethod('platform')">
+                <div class="option-icon platform">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h4>Plataforma</h4>
+                <p>Disponibilize na plataforma do cliente</p>
+                <div class="mt-3">
+                    <small><i class="fas fa-clock"></i> Imediato</small>
+                </div>
+            </div>
+        </div>
+        
+        <input type="hidden" id="selectedMethod" value="">
+
+        <!-- Seção de Mensagem Personalizada -->
+        <div class="message-section" id="messageSection" style="display: none;">
+            <h3><i class="fas fa-comment-alt"></i> Personalizar Mensagem</h3>
+            
+            <div class="form-group">
+                <label for="messageSubject">Assunto</label>
+                <input type="text" id="messageSubject" class="form-control" 
+                       value="Documentos para assinatura - [NOME DO CLIENTE]">
+            </div>
+            
+            <div class="form-group">
+                <label for="messageBody">Mensagem</label>
+                <textarea id="messageBody" class="form-control" rows="6">
+Prezado(a) [NOME],
+
+Os documentos do seu caso estão prontos para assinatura.
+
+Por favor, acesse o link abaixo para visualizar e assinar os documentos:
+[LINK_DOCUMENTOS]
+
+Documentos incluídos:
+[DOCUMENTOS_LISTA]
+
+Em caso de dúvidas, entre em contato conosco.
+
+Atenciosamente,
+Equipe JurisFlow
+                </textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Pré-visualização:</label>
+                <div class="message-preview" id="messagePreview">
+                    <!-- Preview será gerado aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Rastreamento -->
+        <div class="tracking-section" id="trackingSection" style="display: none;">
+            <h3><i class="fas fa-shipping-fast"></i> Rastreamento do Envio</h3>
+            <p>Código de rastreamento gerado automaticamente:</p>
+            
+            <div class="tracking-code" id="trackingCode">
+                ENV-XXXXXX
+            </div>
+            
+            <p><i class="fas fa-info-circle"></i> Use este código para acompanhar o status do envio.</p>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="d-flex gap-2 justify-content-between mt-4 mb-5">
+            <button onclick="goBack()" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <button onclick="sendDocuments()" class="btn btn-success btn-large">
+                <i class="fas fa-paper-plane"></i> Enviar Documentos
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content confirmation-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-check-circle"></i> Envio Concluído!</h3>
+                <button class="btn-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fas fa-paper-plane fa-4x" style="color: #27ae60; margin: 20px 0;"></i>
+                    <h4>Documentos enviados com sucesso!</h4>
+                    <p>Os documentos foram enviados ao cliente e o caso foi atualizado.</p>
+                    
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                        <strong>Detalhes do envio:</strong>
+                        <div id="sendDetails"></div>
+                    </div>
+                    
+                    <div class="tracking-code" id="modalTrackingCode" style="margin: 20px auto;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="viewCase()" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> Ver Detalhes do Caso
+                </button>
+                <button onclick="closeModal()" class="btn btn-outline">
+                    Voltar ao Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/database.js"></script>
+    <script src="scripts/status-config.js"></script>
+    
+    <script>
+        let currentCase = null;
+        let currentCaseId = null;
+        let selectedDocuments = new Set();
+        let selectedMethod = '';
+        let trackingCode = '';
+        
+        // Carregar caso da URL
+        function loadCaseFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentCaseId = urlParams.get('id');
+            
+            if (!currentCaseId) {
+                alert('Caso não especificado!');
+                window.location.href = 'escritorio.html';
+                return;
+            }
+            
+            try {
+                currentCase = JurisFlowDB.getCaseById(currentCaseId);
+                
+                if (!currentCase) {
+                    alert('Caso não encontrado!');
+                    window.location.href = 'escritorio.html';
+                    return;
+                }
+                
+                renderCaseInfo();
+                loadDocuments();
+                generateTrackingCode();
+                
+            } catch (error) {
+                console.error('Erro ao carregar caso:', error);
+                alert('Erro ao carregar caso. Por favor, tente novamente.');
+                window.location.href = 'escritorio.html';
+            }
+        }
+        
+        // Renderizar informações do caso
+        function renderCaseInfo() {
+            const caseInfoBar = document.getElementById('caseInfoBar');
+            
+            caseInfoBar.innerHTML = `
+                <div>
+                    <h3 style="color: #2c3e50; margin-bottom: 10px;">${currentCase.nome}</h3>
+                    <div class="case-details">
+                        <div class="case-detail-item">
+                            <i class="fas fa-hashtag"></i> ${currentCase.id}
+                        </div>
+                        <div class="case-detail-item">
+                            <i class="fas fa-envelope"></i> ${currentCase.email}
+                        </div>
+                        <div class="case-detail-item">
+                            <i class="fas fa-phone"></i> ${currentCase.telefone}
+                        </div>
+                        <div class="case-detail-item">
+                            <i class="fas fa-layer-group"></i> ${getAreaName(currentCase.area)}
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    ${getStatusBadge(currentCase.status, currentCase.urgente)}
+                </div>
+            `;
+        }
+        
+        // Carregar documentos
+        function loadDocuments() {
+            const documents = JurisFlowDB.getDocumentsByCaseId(currentCaseId);
+            const documentsList = document.getElementById('documentsList');
+            
+            if (documents.length === 0) {
+                documentsList.innerHTML = `
+                    <div class="text-center" style="padding: 40px 20px; color: #95a5a6;">
+                        <i class="fas fa-folder-open fa-3x" style="margin-bottom: 20px;"></i>
+                        <p>Nenhum documento disponível para envio.</p>
+                        <a href="escritorio.html" class="btn btn-primary mt-3">
+                            <i class="fas fa-arrow-left"></i> Voltar ao Escritório
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            documentsList.innerHTML = documents.map(doc => renderDocumentItem(doc)).join('');
+            
+            // Selecionar todos os documentos por padrão
+            documents.forEach(doc => {
+                selectedDocuments.add(doc.id);
+            });
+        }
+        
+        // Renderizar item de documento
+        function renderDocumentItem(doc) {
+            const icon = doc.tipo === 'contrato' ? 'fas fa-file-contract' : 
+                        doc.tipo === 'procuração' ? 'fas fa-file-signature' : 'fas fa-file-pdf';
+            
+            const isChecked = selectedDocuments.has(doc.id);
+            
+            return `
+                <div class="document-item">
+                    <div class="document-checkbox">
+                        <input type="checkbox" id="doc_${doc.id}" 
+                               ${isChecked ? 'checked' : ''}
+                               onchange="toggleDocument('${doc.id}')">
+                    </div>
+                    <div class="document-icon">
+                        <i class="${icon}"></i>
+                    </div>
+                    <div class="document-info">
+                        <div class="document-name">${doc.nome}</div>
+                        <div class="document-meta">
+                            ${new Date(doc.created_at).toLocaleDateString('pt-BR')}
+                            • ${doc.tipo || 'Documento'}
+                            ${doc.status === 'aprovado' ? '• ✅ Aprovado' : ''}
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="previewDocument('${doc.id}')" class="btn btn-sm">
+                            <i class="fas fa-eye"></i> Visualizar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Selecionar método de envio
+        function selectMethod(method) {
+            selectedMethod = method;
+            
+            // Atualizar seleção visual
+            document.querySelectorAll('.send-option').forEach(option => {
+                if (option.getAttribute('data-method') === method) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            
+            document.getElementById('selectedMethod').value = method;
+            document.getElementById('messageSection').style.display = 'block';
+            document.getElementById('trackingSection').style.display = 'block';
+            
+            // Atualizar preview da mensagem
+            updateMessagePreview();
+        }
+        
+        // Alternar seleção de documento
+        function toggleDocument(docId) {
+            const checkbox = document.getElementById(`doc_${docId}`);
+            
+            if (checkbox.checked) {
+                selectedDocuments.add(docId);
+            } else {
+                selectedDocuments.delete(docId);
+            }
+            
+            updateMessagePreview();
+        }
+        
+        // Visualizar documento
+        function previewDocument(docId) {
+            alert(`Pré-visualização do documento ${docId}\n\nEm um sistema real, aqui abriria o PDF ou documento completo.`);
+        }
+        
+        // Gerar código de rastreamento
+        function generateTrackingCode() {
+            trackingCode = 'ENV-' + Date.now().toString(36).toUpperCase().substring(0, 6);
+            document.getElementById('trackingCode').textContent = trackingCode;
+            return trackingCode;
+        }
+        
+        // Atualizar preview da mensagem
+        function updateMessagePreview() {
+            const subject = document.getElementById('messageSubject').value;
+            const body = document.getElementById('messageBody').value;
+            
+            // Obter nomes dos documentos selecionados
+            const documents = JurisFlowDB.getDocumentsByCaseId(currentCaseId);
+            const selectedDocs = documents.filter(doc => selectedDocuments.has(doc.id));
+            const docList = selectedDocs.map(doc => `- ${doc.nome}`).join('\n');
+            
+            // Substituir placeholders
+            let previewBody = body
+                .replace(/\[NOME\]/g, currentCase.nome)
+                .replace(/\[NOME DO CLIENTE\]/g, currentCase.nome)
+                .replace(/\[LINK_DOCUMENTOS\]/g, `https://jurisflow.com/cases/${currentCaseId}/documents`)
+                .replace(/\[DOCUMENTOS_LISTA\]/g, docList || 'Nenhum documento selecionado');
+            
+            document.getElementById('messagePreview').innerHTML = `
+                <strong>${subject}</strong>
+                <div style="margin-top: 10px; white-space: pre-line;">${previewBody}</div>
+            `;
+        }
+        
+        // Enviar documentos
+        function sendDocuments() {
+            if (!selectedMethod) {
+                alert('Por favor, selecione um método de envio.');
+                return;
+            }
+            
+            if (selectedDocuments.size === 0) {
+                alert('Por favor, selecione pelo menos um documento para envio.');
+                return;
+            }
+            
+            // Preparar dados do envio
+            const sendData = {
+                caseId: currentCaseId,
+                method: selectedMethod,
+                documents: Array.from(selectedDocuments),
+                trackingCode: trackingCode,
+                sentAt: new Date().toISOString(),
+                subject: document.getElementById('messageSubject').value,
+                message: document.getElementById('messageBody').value,
+                clientName: currentCase.nome,
+                clientEmail: currentCase.email
+            };
+            
+            try {
+                // Registrar envio no banco de dados
+                JurisFlowDB.logSend(sendData);
+                
+                // Atualizar status dos documentos
+                const documents = JurisFlowDB.getDocumentsByCaseId(currentCaseId);
+                documents.forEach(doc => {
+                    if (selectedDocuments.has(doc.id)) {
+                        JurisFlowDB.updateDocument(doc.id, {
+                            status: 'enviado',
+                            envio_data: sendData.sentAt,
+                            envio_metodo: sendData.method
+                        });
+                    }
+                });
+                
+                // Atualizar status do caso
+                JurisFlowDB.updateCase(currentCaseId, {
+                    status: 'enviado_ao_cliente',
+                    envio_data: sendData.sentAt,
+                    envio_metodo: sendData.method,
+                    envio_codigo: trackingCode
+                });
+                
+                // Mostrar confirmação
+                showConfirmation(sendData);
+                
+            } catch (error) {
+                console.error('Erro ao enviar documentos:', error);
+                alert('Erro ao enviar documentos. Por favor, tente novamente.');
+            }
+        }
+        
+        // Mostrar confirmação
+        function showConfirmation(sendData) {
+            document.getElementById('modalTrackingCode').textContent = sendData.trackingCode;
+            
+            // Obter nomes dos documentos enviados
+            const documents = JurisFlowDB.getDocumentsByCaseId(currentCaseId);
+            const sentDocs = documents.filter(doc => selectedDocuments.has(doc.id));
+            const docNames = sentDocs.map(doc => doc.nome).join(', ');
+            
+            document.getElementById('sendDetails').innerHTML = `
+                <p><strong>Método:</strong> ${getMethodName(sendData.method)}</p>
+                <p><strong>Data/Hora:</strong> ${new Date(sendData.sentAt).toLocaleString('pt-BR')}</p>
+                <p><strong>Documentos enviados:</strong> ${sendData.documents.length}</p>
+                <p><strong>Cliente:</strong> ${sendData.clientName}</p>
+                <p><strong>E-mail:</strong> ${sendData.clientEmail}</p>
+                ${docNames ? `<p><strong>Documentos:</strong> ${docNames}</p>` : ''}
+            `;
+            
+            document.getElementById('confirmationModal').style.display = 'flex';
+        }
+        
+        // Obter nome do método
+        function getMethodName(method) {
+            const methods = {
+                'email': 'E-mail',
+                'whatsapp': 'WhatsApp',
+                'platform': 'Plataforma'
+            };
+            return methods[method] || method;
+        }
+        
+        // Fechar modal
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+            window.location.href = `escritorio.html?case=${currentCaseId}`;
+        }
+        
+        // Ver caso
+        function viewCase() {
+            window.location.href = `escritorio.html?case=${currentCaseId}`;
+        }
+        
+        // Voltar
+        function goBack() {
+            window.history.back();
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar caso
+            loadCaseFromURL();
+            
+            // Configurar atualização da mensagem
+            document.getElementById('messageSubject').addEventListener('input', updateMessagePreview);
+            document.getElementById('messageBody').addEventListener('input', updateMessagePreview);
+            
+            // Menu responsivo
+            document.querySelector('.nav-toggle').addEventListener('click', function() {
+                document.querySelector('.nav-links').classList.toggle('show');
+            });
+        });
+    </script>
+</body>
+</html>
